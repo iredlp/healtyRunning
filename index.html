@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UrbanRun - Mini sito progetto</title>
+  <style>
+    :root {
+      --cream: #efe7a9;
+      --soft-peach: #f2d6c4;
+      --soft-pink: #edc3d6;
+      --rose: #dca4cf;
+      --text: #111111;
+      --muted: #5e5e5e;
+      --white: #ffffff;
+      --card: rgba(255,255,255,0.74);
+      --border: rgba(17,17,17,0.08);
+      --shadow: 0 14px 40px rgba(0,0,0,0.08);
+      --radius: 24px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--text);
+      background: linear-gradient(90deg, var(--cream) 0%, var(--soft-peach) 42%, var(--soft-pink) 76%, var(--rose) 100%);
+      min-height: 100vh;
+    }
+
+    .page-shell {
+      width: min(1180px, calc(100% - 32px));
+      margin: 24px auto;
+      background: rgba(255,255,255,0.18);
+      border: 1px solid rgba(255,255,255,0.35);
+      backdrop-filter: blur(10px);
+      border-radius: 30px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 18px 22px;
+      background: rgba(255,255,255,0.35);
+      border-bottom: 1px solid rgba(255,255,255,0.35);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .brand small {
+      display: block;
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(17,17,17,0.7);
+      margin-bottom: 4px;
+      font-weight: 700;
+    }
+
+    .brand h1 {
+      font-size: 22px;
+      line-height: 1;
+      font-weight: 800;
+    }
+
+    .nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .nav button {
+      border: 1px solid rgba(17,17,17,0.08);
+      background: rgba(255,255,255,0.65);
+      color: var(--text);
+      padding: 10px 16px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 700;
+      transition: 0.2s ease;
+    }
+
+    .nav button:hover,
+    .nav button.active {
+      background: var(--text);
+      color: white;
+      transform: translateY(-1px);
+    }
+
+    main {
+      padding: 28px;
+    }
+
+    .section {
+      display: none;
+      animation: fadeUp 0.35s ease;
+    }
+
+    .section.active {
+      display: block;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(14px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.3fr 0.9fr;
+      gap: 22px;
+      align-items: stretch;
+    }
+
+    .hero-main,
+    .panel,
+    .card,
+    .journey,
+    .premium,
+    .vision {
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+    }
+
+    .hero-main {
+      background: rgba(255,255,255,0.58);
+      padding: 34px;
+    }
+
+    .eyebrow {
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .display-title {
+      font-size: clamp(54px, 8vw, 88px);
+      line-height: 0.95;
+      font-weight: 900;
+      letter-spacing: -0.05em;
+      max-width: 700px;
+      margin-bottom: 18px;
+    }
+
+    .highlight {
+      display: inline-block;
+      background: rgba(255,255,255,0.82);
+      border-radius: 999px;
+      padding: 2px 14px 8px;
+    }
+
+    .hero-subtitle {
+      font-size: 22px;
+      font-style: italic;
+      font-weight: 800;
+      margin-bottom: 18px;
+    }
+
+    .hero-text,
+    .lead,
+    .card p,
+    .journey p,
+    .premium p,
+    .vision p,
+    .bullet-list li,
+    .compare li {
+      color: var(--muted);
+      line-height: 1.65;
+      font-size: 16px;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .hero-actions button,
+    .cta-link {
+      border: 0;
+      padding: 13px 20px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-weight: 800;
+      font-size: 15px;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .hero-actions .primary,
+    .cta-link {
+      background: var(--text);
+      color: white;
+    }
+
+    .hero-actions .secondary {
+      background: rgba(255,255,255,0.8);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .stats-grid,
+    .cards-grid,
+    .compare-grid,
+    .impact-grid,
+    .journey-grid {
+      display: grid;
+      gap: 18px;
+    }
+
+    .stats-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .panel {
+      background: rgba(255,255,255,0.62);
+      padding: 24px;
+      min-height: 170px;
+    }
+
+    .panel strong {
+      display: block;
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+
+    .section-header {
+      margin-bottom: 24px;
+    }
+
+    .section-header small {
+      display: block;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .section-header h2 {
+      font-size: clamp(34px, 5vw, 58px);
+      line-height: 1;
+      letter-spacing: -0.04em;
+      margin-bottom: 14px;
+    }
+
+    .cards-grid,
+    .impact-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .card,
+    .journey,
+    .premium,
+    .vision {
+      background: rgba(255,255,255,0.62);
+      padding: 24px;
+    }
+
+    .card h3,
+    .journey h3,
+    .premium h3,
+    .vision h3,
+    .compare h3 {
+      font-size: 22px;
+      margin-bottom: 12px;
+    }
+
+    .tag {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: rgba(17,17,17,0.08);
+      margin-bottom: 14px;
+    }
+
+    .compare-grid {
+      grid-template-columns: 1fr 1fr;
+      margin-top: 24px;
+    }
+
+    .compare {
+      background: rgba(255,255,255,0.55);
+      border: 1px solid var(--border);
+      padding: 24px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .compare ul,
+    .bullet-list {
+      padding-left: 20px;
+      margin-top: 10px;
+    }
+
+    .journey-layout {
+      display: grid;
+      grid-template-columns: 1.35fr 0.85fr;
+      gap: 18px;
+      margin-top: 24px;
+    }
+
+    .journey-grid {
+      grid-template-columns: repeat(2, 1fr);
+      margin-top: 14px;
+    }
+
+    .journey-step {
+      background: rgba(17,17,17,0.04);
+      border-radius: 20px;
+      padding: 16px;
+      border: 1px solid rgba(17,17,17,0.06);
+      font-weight: 700;
+      line-height: 1.5;
+    }
+
+    .premium {
+      background: rgba(17,17,17,0.88);
+      color: white;
+    }
+
+    .premium p,
+    .premium li {
+      color: rgba(255,255,255,0.82);
+    }
+
+    .vision {
+      margin-top: 24px;
+      background: linear-gradient(135deg, rgba(17,17,17,0.92), rgba(70,52,70,0.82));
+      color: white;
+    }
+
+    .vision p {
+      color: rgba(255,255,255,0.84);
+    }
+
+    footer {
+      padding: 20px 28px 28px;
+      color: rgba(17,17,17,0.72);
+      font-size: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 900px) {
+      .hero,
+      .journey-layout,
+      .compare-grid,
+      .cards-grid,
+      .impact-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .stats-grid,
+      .journey-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .display-title {
+        font-size: 54px;
+      }
+
+      .topbar {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      main {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-shell">
+    <header class="topbar">
+      <div class="brand">
+        <small>Her Tech Venture</small>
+        <h1>UrbanRun</h1>
+      </div>
+
+      <nav class="nav">
+        <button class="active" data-page="home">Home</button>
+        <button data-page="problem">Problema</button>
+        <button data-page="solution">Soluzione</button>
+        <button data-page="impact">Impatto</button>
+      </nav>
+    </header>
+
+    <main>
+      <section class="section active" id="home">
+        <div class="hero">
+          <div class="hero-main">
+            <div class="eyebrow">Living Well in the City</div>
+            <h2 class="display-title">Il progetto per la tua <span class="highlight">startup</span></h2>
+            <div class="hero-subtitle">Corsa, salute, community e impatto urbano</div>
+            <p class="hero-text">
+              UrbanRun è una piattaforma che aiuta runner e altri sportivi a trovare percorsi più sicuri,
+              creare gruppi per correre insieme e trasformare ogni allenamento in benefici concreti per la salute e per la città.
+            </p>
+            <div class="hero-actions">
+              <button class="primary" data-go="solution">Scopri la soluzione</button>
+              <button class="secondary" data-go="problem">Guarda il problema</button>
+            </div>
+          </div>
+
+          <div class="stats-grid">
+            <div class="panel">
+              <strong>+ Sicurezza</strong>
+              <p class="lead">Percorsi suggeriti in base a qualità percepita, presenza di persone, feedback finali e vivibilità della zona.</p>
+            </div>
+            <div class="panel">
+              <strong>+ Community</strong>
+              <p class="lead">Gruppi locali per correre insieme per fascia oraria, livello e obiettivi.</p>
+            </div>
+            <div class="panel">
+              <strong>+ Salute</strong>
+              <p class="lead">Punti, sconti, check-up e consulenze sbloccati grazie alla costanza e alle valutazioni post-corsa.</p>
+            </div>
+            <div class="panel">
+              <strong>+ Impatto</strong>
+              <p class="lead">Premi extra per plogging, raccolta rifiuti ed eventi che migliorano lo spazio urbano.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="problem">
+        <div class="section-header">
+          <small>Pagina 2</small>
+          <h2>Il problema</h2>
+          <p class="lead">
+            Correre in città non è sempre semplice: molte app misurano la performance, ma quasi nessuna affronta insieme sicurezza, motivazione, socialità e qualità dell'ambiente urbano.
+          </p>
+        </div>
+
+        <div class="cards-grid">
+          <article class="card">
+            <div class="tag">Spazio urbano</div>
+            <h3>Percorsi non sempre adatti</h3>
+            <p>Zone poco illuminate, traffico, smog, pavimentazione irregolare e quartieri poco conosciuti rendono difficile scegliere dove allenarsi bene.</p>
+          </article>
+
+          <article class="card">
+            <div class="tag">Salute & benessere</div>
+            <h3>Allenarsi da soli può scoraggiare</h3>
+            <p>Molte persone rinunciano a correre per mancanza di motivazione, paura o assenza di una rete locale con cui uscire in maggiore tranquillità.</p>
+          </article>
+
+          <article class="card">
+            <div class="tag">Valore reale</div>
+            <h3>I dati spesso non tornano utili</h3>
+            <p>Le app fitness raccolgono molti dati, ma raramente li trasformano in vantaggi concreti come prevenzione, sconti, check-up o consulenze.</p>
+          </article>
+
+          <article class="card">
+            <div class="tag">Economia circolare</div>
+            <h3>Benessere e ambiente viaggiano separati</h3>
+            <p>Fare sport e prendersi cura della città sono ancora due azioni scollegate, anche se potrebbero rafforzarsi a vicenda.</p>
+          </article>
+        </div>
+
+        <div class="compare-grid">
+          <div class="compare">
+            <h3>Cosa fanno già le app esistenti</h3>
+            <ul>
+              <li>Tracciano tempi, distanza e performance</li>
+              <li>Premiano soprattutto l'aspetto sportivo individuale</li>
+              <li>Non mettono al centro la qualità urbana del percorso</li>
+              <li>Non collegano davvero corsa, salute e impatto ambientale</li>
+            </ul>
+          </div>
+          <div class="compare">
+            <h3>Cosa cambia con UrbanRun</h3>
+            <ul>
+              <li>La corsa diventa più sicura e più sociale</li>
+              <li>La salute genera vantaggi misurabili e concreti</li>
+              <li>La città entra nel sistema come spazio da vivere meglio</li>
+              <li>L'impatto ambientale diventa parte dell'esperienza sportiva</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="solution">
+        <div class="section-header">
+          <small>Pagina 3</small>
+          <h2>La soluzione</h2>
+          <p class="lead">
+            UrbanRun unisce dati di corsa, questionari finali, community locale e reward system per costruire un ecosistema di benessere personale e urbano.
+          </p>
+        </div>
+
+        <div class="cards-grid">
+          <article class="card">
+            <div class="tag">1</div>
+            <h3>Percorsi più sicuri</h3>
+            <p>L'app valorizza i tracciati percepiti come migliori grazie ai feedback degli utenti dopo la corsa.</p>
+          </article>
+
+          <article class="card">
+            <div class="tag">2</div>
+            <h3>Gruppi locali</h3>
+            <p>Runner e sportivi possono organizzarsi in base a zona, livello, orario e obiettivi, aumentando motivazione e sicurezza.</p>
+          </article>
+
+          <article class="card">
+            <div class="tag">3</div>
+            <h3>Punti e sconti</h3>
+            <p>Dopo ogni corsa e questionario finale si accumulano punti che sbloccano livelli diversi di sconto su prodotti e servizi convenzionati.</p>
+          </article>
+
+          <article class="card">
+            <div class="tag">4</div>
+            <h3>Salute con ritorno concreto</h3>
+            <p>Dopo un certo numero di corse si sblocca una prima consulenza gratuita sugli obiettivi di allenamento.</p>
+          </article>
+
+          <article class="card">
+            <div class="tag">5</div>
+            <h3>Plogging e raccolta rifiuti</h3>
+            <p>Partecipare a eventi green o dimostrare di aver raccolto rifiuti dopo la corsa permette di guadagnare punti extra.</p>
+          </article>
+
+          <article class="card">
+            <div class="tag">6</div>
+            <h3>Dati anonimi e aggregati</h3>
+            <p>I dati raccolti vengono analizzati in forma anonima per creare valore per aziende e partner convenzionati senza esporre i singoli utenti.</p>
+          </article>
+        </div>
+
+        <div class="journey-layout">
+          <div class="journey">
+            <h3>User journey</h3>
+            <p>Il funzionamento dell'app è semplice e immediato.</p>
+            <div class="journey-grid">
+              <div class="journey-step">1. Scelgo il percorso e il gruppo più adatto</div>
+              <div class="journey-step">2. Corro e traccio l'allenamento</div>
+              <div class="journey-step">3. Compilo il questionario finale sulla qualità della corsa</div>
+              <div class="journey-step">4. Accumulo punti, livelli e vantaggi concreti</div>
+            </div>
+          </div>
+
+          <aside class="premium">
+            <h3>Versione premium</h3>
+            <ul class="bullet-list">
+              <li>Sconti più alti sui partner convenzionati</li>
+              <li>Almeno 3 check-up gratuiti</li>
+              <li>Accesso a benefit e servizi aggiuntivi</li>
+              <li>Maggiore personalizzazione degli obiettivi</li>
+            </ul>
+          </aside>
+        </div>
+      </section>
+
+      <section class="section" id="impact">
+        <div class="section-header">
+          <small>Pagina 4</small>
+          <h2>Impatto e business</h2>
+          <p class="lead">
+            UrbanRun genera valore per utenti, partner e città, trasformando l'attività fisica in un ecosistema di benessere urbano condiviso.
+          </p>
+        </div>
+
+        <div class="impact-grid">
+          <article class="card">
+            <div class="tag">Impatto sociale</div>
+            <h3>Più motivazione e più sicurezza</h3>
+            <p>Allenarsi in gruppo e scegliere percorsi migliori aiuta più persone a sentirsi a proprio agio nel vivere la città attraverso lo sport.</p>
+          </article>
+
+          <article class="card">
+            <div class="tag">Impatto salute</div>
+            <h3>Prevenzione e continuità</h3>
+            <p>La costanza nell'attività fisica viene premiata con consulenze, check-up e vantaggi che rendono lo sport più accessibile.</p>
+          </article>
+
+          <article class="card">
+            <div class="tag">Impatto ambientale</div>
+            <h3>Lo sport aiuta la città ad essere migliore</h3>
+            <p>La raccolta rifiuti e gli eventi green integrati nel sistema reward collegano direttamente corsa ed economia circolare urbana.</p>
+          </article>
+
+          <article class="card">
+            <div class="tag">Ricavi</div>
+            <h3>Modello di business</h3>
+            <p>Abbonamento premium, partnership con brand sportivi, strutture mediche convenzionate +.</p>
+          </article>
+        </div>
+
+        <div class="vision">
+          <div class="tag" style="background: rgba(255,255,255,0.14); color: white;">Visione finale</div>
+          <h3>Non è solo un'app per correre o fare sport</h3>
+          <p>
+            UrbanRun connette salute, sicurezza urbana, community e sostenibilità. Aiuta le persone a vivere meglio la città e aiuta la città a diventare un posto migliore in cui allenarsi e stare bene.
+          </p>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div>UrbanRun — Tutti i diritti riservati</div>
+      <a href="#" class="cta-link" data-go="home">Torna alla home</a>
+    </footer>
+  </div>
+
+  <script>
+    const buttons = document.querySelectorAll('[data-page]');
+    const goButtons = document.querySelectorAll('[data-go]');
+    const sections = document.querySelectorAll('.section');
+
+    function openPage(pageId) {
+      sections.forEach(section => {
+        section.classList.toggle('active', section.id === pageId);
+      });
+
+      buttons.forEach(button => {
+        button.classList.toggle('active', button.dataset.page === pageId);
+      });
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    buttons.forEach(button => {
+      button.addEventListener('click', () => openPage(button.dataset.page));
+    });
+
+    goButtons.forEach(button => {
+      button.addEventListener('click', (event) => {
+        event.preventDefault();
+        openPage(button.dataset.go);
+      });
+    });
+  </script>
+</body>
+</html>
